@@ -7,5 +7,4 @@ int main(){
   char s[100] = "ls -l; echo hello\n";
   parseInput( s);
 
-  
 }

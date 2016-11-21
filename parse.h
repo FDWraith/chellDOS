@@ -1,1 +1,2 @@
-char * * parseInput( char * string );
+char * * parseLine( char * string );
+char * * * parseInput( char * string );
