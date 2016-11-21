@@ -4,7 +4,7 @@
 #include "parse.h"
 
 int main(){
-  char s[100] = "ls -l; echo hello\n";
+  char s[100] = "ls -l;\n";
   parseInput( s);
 
 }

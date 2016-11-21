@@ -26,14 +26,12 @@ char * * * parseInput( char * string ){
   //printf(" Got Here! \n" );
   
   while( currentString ){
-    
     char * copyString = strsep(&currentString, ";");
-
-    printf(" Phase 1 \n");
     printf(" copyString Value: [%s] \n", copyString);
-    
-    cmdList[i] = parseLine( copyString );
-    i++;
+    if( strcmp( copyString, "") != 0 && strcmp( copyString, " ") != 0 ){
+      cmdList[i] = parseLine( copyString );
+      i++;
+    }
   }
   cmdList[i] = 0;
 
@@ -55,6 +53,7 @@ char * * * parseInput( char * string ){
   }
 
   printf("Testing Successful\n");
+  
   return cmdList;
 
 }
