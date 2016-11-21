@@ -31,9 +31,14 @@ char * * parseInput( char * string ){
     printf(" copyString Value: [%s] \n", copyString);
     
     while ( copyString ){
-      cmd[k] = strsep( &copyString, " ");
-      k++;
+      char * p = strsep( &copyString, " ");
+      if( strcmp( p, "" ) != 0 ){
+        cmd[k] = p;
+        printf("cmdArg: [%s]\n", cmd[k] );
+        k++;
+      }
     }
+    cmd[k] = 0;
     cmdList[i] = cmd;
   }
 
