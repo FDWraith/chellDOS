@@ -1,5 +1,5 @@
 compile:
-	gcc main.c parse.c -o shell
+	gcc main.c parse.c execute.c -o shell
 run:
 	./shell
 clear:

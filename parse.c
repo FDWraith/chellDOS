@@ -6,6 +6,9 @@
 char * * parseLine( char * string);
 
 
+//Takes in a string input
+//Converts into a list of Commands for execvp
+//Returns an array of Commands.
 char * * * parseInput( char * string ){
 
   //printf(" Does it get Here? \n");
@@ -27,7 +30,7 @@ char * * * parseInput( char * string ){
   
   while( currentString ){
     char * copyString = strsep(&currentString, ";");
-    printf(" copyString Value: [%s] \n", copyString);
+    // printf(" copyString Value: [%s] \n", copyString);
     if( strcmp( copyString, "") != 0 && strcmp( copyString, " ") != 0 ){
       cmdList[i] = parseLine( copyString );
       i++;
@@ -36,7 +39,7 @@ char * * * parseInput( char * string ){
   cmdList[i] = 0;
 
   //Testing cmdList
-  
+  /*
   printf("Testing cmdList\n");
   int l = 0;
   //printf("[%s]\n", cmdList[0][2]);
@@ -53,11 +56,16 @@ char * * * parseInput( char * string ){
   }
 
   printf("Testing Successful\n");
-  
+  */
   return cmdList;
 
 }
 
+
+//Takes in a String input
+//Converts the string into an array of strings, which is usuable by execvp
+//Gets rid of whitespace and newlines
+//Returns the array of strings.
 char * * parseLine( char * string ){
 
   //Removing newLine
@@ -77,7 +85,7 @@ char * * parseLine( char * string ){
     char * p = strsep( &copyString, " ");
     if( strcmp( p, "" ) != 0 ){
       cmd[k] = p;
-      printf("cmdArg: [%s]\n", cmd[k] );
+      //printf("cmdArg: [%s]\n", cmd[k] );
       k++;
     }
   }
