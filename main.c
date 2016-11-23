@@ -9,7 +9,9 @@ int main(){
   printf("> ");
   while( fgets(s, sizeof(s), stdin) ){
     char * * * cmdList = parseInput( s );
+       
     executeList( cmdList );
+    
     printf("> ");
   }
 }

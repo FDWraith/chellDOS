@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <wait.h>
 #include <string.h>
+#include <fcntl.h>
 
 //Executes one line of command.
 //Takes an array of strings, which is the parsed command from stdin.
@@ -16,11 +17,59 @@ int executeLine( char * * cmd){
     int f = fork();
     int status;  
     if( f == 0){
-      execvp(cmd[0], cmd);
+      if( ){
+     
+      }else if( strcmp( cmd[1], ">>" ) == 0){
+          
+      }else if( strcmp( cmd[1], "2>" ) == 0){
+        
+      }else if( strcmp( cmd[1], "&>" ) == 0){
+        
+      }else if( strcmp( cmd[1], "2>>" ) == 0){
+        
+      }else if( strcmp( cmd[1], "<" ) == 0){
+          
+      }else if( strcmp( cmd[1], "|") == 0){
+        
+      }else{
+        execvp(cmd[0], cmd);
+      }
     }else{
       return wait(&status);
     }
   }
+}
+
+void executeSpecialChar( char * * cmd, char * target){
+  int i = 0;
+  while( cmd[i] ){    
+    if( strcmp( cmd[i], target ) == 0){
+      int fd2 = dup(1);
+      dup2(1, fd);
+      int f2 = fork();
+      if( f2 == 0){
+        char * * cmdTemp1 = (char * *)malloc(sizeof(char * *));
+        int j = 0;
+        for(; j < i; j++){
+          cmdTemp1[j] = cmd[j];
+        }
+        execvp(cmdTemp1[0], cmdTemp1);
+      }else{
+        
+      }
+    }
+
+  }
+}
+
+int openSpecialChar( char  * target , char * path){
+  if( strcmp( target, ">") == 0){
+    int fd = open( path, OCREAT | O_WRONLY, 666);
+    return fd;
+  }
+  
+  
+  //int fd = open(, O_CREAT | O_WRONLY, 666);
 }
 
 void executeList( char * * * cmdList){
