@@ -6,10 +6,10 @@
 
 int main(){
   char s[1000];
-  printf(">");
+  printf("> ");
   while( fgets(s, sizeof(s), stdin) ){
     char * * * cmdList = parseInput( s );
     executeList( cmdList );
-    printf(">");
+    printf("> ");
   }
 }
