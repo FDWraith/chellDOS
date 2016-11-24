@@ -23,7 +23,16 @@ int executeLine( char * * cmd){
     if( f == 0){
 
       if ( executeSpecialChar( cmd, ">") ){
-        //printf("Carrot Success\n");
+        exit(0);        
+      }else if( executeSpecialChar( cmd, ">>" ) ){
+        exit(0);
+      }else if( executeSpecialChar( cmd, "2>" ) ){
+        exit(0);
+      }else if( executeSpecialChar( cmd, "2>>" ) ){
+        exit(0);
+      }else if( executeSpecialChar( cmd, "<" ) ){
+        exit(0);
+      }else if( executeSpecialChar( cmd, "|" ) ){
         exit(0);
       }else{
         execvp( cmd[0], cmd);
@@ -58,34 +67,41 @@ int executeSpecialChar( char * * cmd, char * target){
   int i = 0;
   while( cmd[i] ){
     if( strcmp( cmd[i], target ) == 0 ){
+      int fd, fd2, fd3;
       if( strcmp( target, "|") == 0){
         //Specia; case #1
       }else if( strcmp( target, "<" ) == 0){
-        //Special case #2 
+        fd = openSpecialChar( target, cmd[i+1]);
+        fd2 = dup(fd);
+        dup2(fd, 0);
+      }else if( strcmp( target, "2>") == 0 || strcmp( target, "2>>") == 0){
+        fd = openSpecialChar( target, cmd[i+1]);
+        fd2 = dup(fd);
+        dup2(fd, 2);
       }else{
-        int fd = openSpecialChar( target, cmd[i+1]);
-        int fd2 = dup(fd);//Store STDOut
+        fd = openSpecialChar( target, cmd[i+1]);
+        fd2 = dup(fd);
         dup2(fd, 1);
-        int status;
-
-        int j = 0;
-          char * * cmdTemp = (char * *)malloc(sizeof( char * *));
-          for(; j < i; j++){
-            cmdTemp[j] = cmd[j];
-            j++;
-          }
-          
-        int f = fork();
-        if( f == 0 ){
-
-          execvp( cmdTemp[0], cmdTemp);
-          
-        }else{
-          wait(&status);
-          free(cmdTemp);
-          close(fd2);
-          return 1;
-        }
+      }
+      int status;
+      
+      int j = 0;
+      char * * cmdTemp = (char * *)malloc(sizeof( char * *));
+      for(; j < i; j++){
+        cmdTemp[j] = cmd[j];
+        j++;
+      }
+      
+      int f = fork();
+      if( f == 0 ){
+        
+        execvp( cmdTemp[0], cmdTemp);
+        
+      }else{
+        wait(&status);
+        free(cmdTemp);
+        close(fd2);
+        return 1;
       }
     }
     i++;
@@ -95,8 +111,14 @@ int executeSpecialChar( char * * cmd, char * target){
 }
 
 int openSpecialChar( char  * target , char * path){
-  if( strcmp( target, ">") == 0){
+  if( strcmp( target, ">") == 0 || strcmp( target, "2>") == 0){
     int fd = open( path, O_CREAT | O_WRONLY, 666);
+    return fd;
+  }else if( strcmp( target, ">>" ) == 0 || strcmp( target, "2>>" ) == 0){
+    int fd = open( path, O_CREAT | O_APPEND, 666);
+    return fd;
+  }else if( strcmp( target, "<" ) == 0){
+    int fd = open( path, O_CREAT | O_RDONLY, 444);
     return fd;
   }
   
