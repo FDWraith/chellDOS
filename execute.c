@@ -66,6 +66,7 @@ int executeLine( char * * cmd){
 int executeSpecialChar( char * * cmd, char * target){
   int i = 0;
   while( cmd[i] ){
+    //printf("Cmd[%d]: %s\n", i, cmd[i]);
     if( strcmp( cmd[i], target ) == 0 ){
       int fd, fd2, fd3;
       if( strcmp( target, "|") == 0){
@@ -89,7 +90,6 @@ int executeSpecialChar( char * * cmd, char * target){
       char * * cmdTemp = (char * *)malloc(sizeof( char * *));
       for(; j < i; j++){
         cmdTemp[j] = cmd[j];
-        j++;
       }
       
       int f = fork();
