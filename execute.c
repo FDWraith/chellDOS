@@ -68,7 +68,7 @@ int executeSpecialChar( char * * cmd, char * target){
   while( cmd[i] ){
     //printf("Cmd[%d]: %s\n", i, cmd[i]);
     if( strcmp( cmd[i], target ) == 0 ){
-      int fd, fd2, fd3;
+      int fd, fd2;
       if( strcmp( target, "|") == 0){
         //Specia; case #1
       }else if( strcmp( target, "<" ) == 0){
@@ -112,7 +112,7 @@ int executeSpecialChar( char * * cmd, char * target){
 
 int openSpecialChar( char  * target , char * path){
   if( strcmp( target, ">") == 0 || strcmp( target, "2>") == 0){
-    int fd = open( path, O_CREAT | O_WRONLY, 666);
+    int fd = open( path, O_CREAT | O_WRONLY | O_TRUNC, 666);
     return fd;
   }else if( strcmp( target, ">>" ) == 0 || strcmp( target, "2>>" ) == 0){
     int fd = open( path, O_CREAT | O_APPEND, 666);
