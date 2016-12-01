@@ -73,90 +73,72 @@ int executeSpecialChar( char * * cmd, char * target){
       int fd, fd2;
       if( strcmp( target, "|") == 0){
         //Specia; case #1
+        //printf("Special Case #1\n");
+
         int j = 0;
         char * * cmdBefore = (char * *)malloc(sizeof( char * *));
         char * * cmdAfter = (char * *)malloc(sizeof( char * *));
         for(; j < i; j++){
           cmdBefore[j] = cmd[j];
+          //printf("Current:[%s]", cmdBefore[j]);
         }
-        cmdBefore[j] = ">";
-        cmdBefore[j+1] = "tempFile";
-        cmdBefore[j+2] = 0;
+        cmdBefore[j] = 0;
+        
+        //cmdBefore[j+1] = "tempFile";
+        //cmdBefore[j+2] = 0;
 
         j = i + 1;
         while( cmd[j] ){
           cmdAfter[j - i - 1] = cmd[j];
+          //printf("Current:[%s]\n", cmdAfter[j -i -1]);
           j++;
         }
-        cmdAfter[j] = "<";
-        cmdAfter[j+1] = "tempFile";
-        cmdAfter[j+2] = 0;
+        cmdAfter[j] = 0;
 
-        int status1, status2, status3;
-        int f1 = fork();
-        if( f1 == 0 ){
-          executeSpecialChar( cmdBefore, ">");
-        }else{
-          wait(&status1);
-          int f2 = fork();
-          if( f2 == 0){
-            executeSpecialChar( cmdAfter, "<");
-          }else{
-            wait(&status2);
-            int f3 = fork();
-            if( f3 == 0){
-              execlp("rm", "rm", "tempFile", NULL);
-            }else{
-              wait(&status3);
-              return 1;
-            }
-          }
-        }
+        //cmdAfter[j+1] = "tempFile";
+        //cmdAfter[j+2] = 0;
+
+        printf("Flag 1\n");
+        int fds[2];
+        pipe(fds);
+
+        printf("Flag 1.5\n");
         
-
-
-        /*
-        umask(0);
-        fd = open( "tempFile", O_CREAT | O_RDWR, 666 );
         fd2 = dup(1);
-        dup2( fd, 1);
-
+        dup2(fds[1], 1);
         int status;
-        int f = fork();
-        if( f == 0 ){
-          execvp( cmdBefore[0], cmdBefore );
-        }else{
-          wait(&status);
-          close(fd);
-          dup2(1, fd2);
-          // free(cmdBefore);
+
+        dup2(1, fd2);
+        printf("Flag Status: Active\n");
+        dup2( fds[1], 1);
           
-          fd = open( "tempFile", O_CREAT | O_RDWR, 666 );
-          fd2 = dup(0);
-          dup2( fd, 0);
-
-          int status2;
-          int f2 = fork();
-          if( f2 == 0){
-            execvp( cmdAfter[0], cmdAfter );
-          }else{
-            wait(&status2);
-            close(fd);
-            dup2( 0, fd2);
-            //free(cmdAfter);
-
-            int status3;
-            int f3 = fork();
-            if( f3 == 0 ){
-              execlp( "rm", "rm", "tempFile", NULL);
-            }else{
-              wait(&status3);
-              return 1;
-            }
-            
-          }
+        int f = fork();
+        if (f == 0) {
+          close(fds[0]);
+          execvp(cmdBefore[0], cmdBefore);
         }
-        */
+        else {         
+          wait(&status);
+          dup2(1, fd2);
+          //printf("%s", s);
+        }
+
+        printf("Flag 2\n");
+        
+        fd2 = dup(0);
+        dup2(fds[0], 0);
+        int f2 = fork();
+        if (f2 == 0) {
+          close(fds[1]);
+          execvp(cmdAfter[0], cmdAfter);
+        }
+        else {
+          wait(&status);
+          dup2(0, fd2);
+        }
+        printf("Flag 3\n");
+        return 1;
+        
       }else{
         if( strcmp( target, "<" ) == 0){
           fd = openSpecialChar( target, cmd[i+1]);
