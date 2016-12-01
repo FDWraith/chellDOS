@@ -4,7 +4,6 @@
 #include <unistd.h>
 
 char * * parseLine( char * string);
-char * trimString( char * string);
 
 //Takes in a string input
 //Converts into a list of Commands for execvp
@@ -95,12 +94,4 @@ char * * parseLine( char * string ){
   return cmd;
 }
 
-char * trimString( char * string){
-  char * newString = (char *)malloc(sizeof(char *));
-  int i = 0;
-  while( string[i] ){
-    if( strcmp( string[i], " ") != 0 ){
-      
-    }
-  }
-}
+

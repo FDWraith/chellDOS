@@ -98,45 +98,43 @@ int executeSpecialChar( char * * cmd, char * target){
         //cmdAfter[j+1] = "tempFile";
         //cmdAfter[j+2] = 0;
 
-        printf("Flag 1\n");
+        // printf("Flag 1\n");
         int fds[2];
         pipe(fds);
 
-        printf("Flag 1.5\n");
-        
         fd2 = dup(1);
-        dup2(fds[1], 1);
-        int status;
-
-        dup2(1, fd2);
-        printf("Flag Status: Active\n");
-        dup2( fds[1], 1);
-          
+        int status;          
         int f = fork();
         if (f == 0) {
-          close(fds[0]);
+          dup2(fds[1], 1);
+          //executeLine( cmdBefore);
           execvp(cmdBefore[0], cmdBefore);
         }
         else {         
           wait(&status);
           dup2(1, fd2);
+          close( fds[1] );
           //printf("%s", s);
         }
 
-        printf("Flag 2\n");
+        //printf("Flag 2\n");
+        //printf("FD: [%d, %d]\n", fds[0], fds[1]);
         
-        fd2 = dup(0);
-        dup2(fds[0], 0);
+        int status2;
         int f2 = fork();
+        fd2 = dup(0);
         if (f2 == 0) {
-          close(fds[1]);
+          dup2(fds[0], 0);
+          //printf("FileDesciptor:[%d]\n",fds[0]);
+          //executeLine( cmdAfter);
           execvp(cmdAfter[0], cmdAfter);
         }
         else {
-          wait(&status);
+          wait(&status2);
           dup2(0, fd2);
+          close( fds[0]);
         }
-        printf("Flag 3\n");
+        //printf("Flag 3\n");
         return 1;
         
       }else{
