@@ -89,6 +89,7 @@ int executeSpecialChar(char * * cmd, char * target){
         if (f == 0) {
           dup2(fds[1], 1);
           execvp(cmdBefore[0], cmdBefore);
+          //executeLine(cmdBefore); //Attempted Triple Pipe
         }
         else {         
           wait(&status);
@@ -102,6 +103,7 @@ int executeSpecialChar(char * * cmd, char * target){
         if (f2 == 0) {
           dup2(fds[0], 0);
           execvp(cmdAfter[0], cmdAfter);
+          //executeLine(cmdAfter); //Attempted Triple Pipe
         }
         else {
           wait(&status2);

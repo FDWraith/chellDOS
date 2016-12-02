@@ -2,16 +2,18 @@
     by Kevin Zhang and Tina La
 
     Features:
-        Executes commands like bash shell!
-        Redirection using >, <, >>
+        Executes commands like bash!
+        Redirection using >, <, >>, 2>
         Piping
         
     Attempted:
-
+        Tried to get triple piping working, but the solution we have is too hard to implement.
+        
     Bugs:
         Exit may have to be inputted more than once to actually exit.
         The prompt symbol ">" may appear as ">>>" after running certain commands.
-        
+        Sometimes, umask does not work as intended.
+    
     Files & Function Headers:
     
     parse.c
